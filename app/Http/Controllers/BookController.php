@@ -38,15 +38,28 @@ class BookController extends Controller
             'genres.*' => 'exists:genres,id'
         ]);
 
-        $book = Book::create($validated);
+        try {
+            if (Book::where('title', $validated['title']) //Проверка уникальности книги с учетом автора
+            ->where('author_id', $validated['author_id'])
+            ->exists()) {
+                throw new \Exception('Книга с таким названием у этого автора уже существует');
+            }
 
-        if (isset($validated['genres'])) {
-            $book->genres()->attach($validated['genres']);
+            $book = Book::create($validated);
+
+            if (isset($validated['genres'])) { //Проверка есть ли жанр
+                $book->genres()->attach($validated['genres']);
+            }
+
+            $this->logAction('created', $book);
+
+            return response()->json($book->load('genres'), 201);
+        }
+        catch (\Exception $e) {
+            Log::channel('books')->error("Create failed: " . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
         }
 
-        $this->logAction('CREATED', $book);
-
-        return response()->json($book->load('genres'), 201);
     }
 
     /**
@@ -65,17 +78,35 @@ class BookController extends Controller
             'genres' => 'array',
             'genres.*' => 'exists:genres,id'
         ]);
-        $book->update($request->all());
 
-        $this->logAction('UPDATED', $book);
+        try {
+            $book->update($validated);
 
-        return $book;
+            if (isset($validated['genres'])) {
+                $book->genres()->sync($validated['genres']);
+            }
+
+            $this->logAction('updated', $book);
+
+            return $book;
+        }
+        catch (\Exception $e) {
+            Log::channel('books')->error("Update failed for book {$book->id}: " . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+
     }
 
     // DELETE /api/books/{id} -> Удаление книги с определенным id
     public function destroy(Book $book) {
-        $book->delete();
-        $this->logAction('DELETED', $book);
-        return response()->json(null, 204);
+        try {
+            $book->delete();
+            $this->logAction('deleted', $book);
+            return response()->json(null, 204);
+        }
+        catch (\Exception $e) {
+            Log::channel('books')->error("Delete failed for book {$book->id}: " . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

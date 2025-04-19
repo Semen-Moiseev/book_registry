@@ -18,9 +18,19 @@ class GenreController extends Controller
     // POST /api/genre -> Создание жанра
     public function store(Request $request)
     {
-        $request->validate(['name' => 'required|string|max:255']);
-        $genre = Genre::create($request->all());
-        return response()->json($genre, 201);
+        $validated = $request->validate(['name' => 'required|string|max:255']);
+
+        try {
+            if (Genre::where('name', $validated['name'])->exists()) {
+                throw new \Exception('Жанр с таким названием уже существует');
+            }
+
+            $genre = Genre::create($validated);
+            return response()->json($genre, 201);
+        }
+        catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -35,14 +45,25 @@ class GenreController extends Controller
     public function update(Request $request, Genre $genre)
     {
         $request->validate(['name' => 'sometimes|string|max:255']);
-        $genre->update($request->all());
-        return $genre;
+
+        try {
+            $genre->update($request->all());
+            return $genre;
+        }
+        catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     // DELETE /api/genre/{id} -> Удаление жанра с определенным id
     public function destroy(Genre $genre)
     {
-        $genre->delete();
-        return response()->json(null, 204);
+        try {
+            $genre->delete();
+            return response()->json(null, 204);
+        }
+        catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }
