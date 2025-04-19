@@ -4,7 +4,7 @@ namespace App\Enums;
 
 enum BookType: string
 {
-    case Graphic = 'graphic';
-    case Digital = 'digital';
-    case Print = 'print';
+    case Graphic = 'graphic'; //Графическое издание
+    case Digital = 'digital'; //Цифровое издание
+    case Print = 'print'; // Печатное издание
 }
