@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Author;
 
 class LoginController extends Controller
 {
@@ -27,12 +28,17 @@ class LoginController extends Controller
     }
 
     public function registerCreate(Request $request) {
-        User::create($request->only(['name', 'email', 'password']));
+        User::create($request->only(['name', 'email', 'password'])); // Создание пользователя
+        Author::create($request->only(['name'])); // Создание автора
         return redirect('login');
     }
 
     public function logout(Request $request) {
         Auth::logout();
         return redirect('/');
+    }
+
+    public function admin_panel(Request $request) {
+        return view('admin_panel');
     }
 }

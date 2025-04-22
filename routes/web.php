@@ -19,3 +19,5 @@ Route::post('/login', [LoginController::class, 'authentication'])->name('authent
 Route::post('/register', [LoginController::class, 'registerCreate'])->name('registerCreate');
 
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::get('/admin_panel', [LoginController::class, 'admin_panel'])->name('admin_panel');

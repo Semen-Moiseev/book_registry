@@ -6,13 +6,29 @@
         <link rel="stylesheet" href="css/style.css" />
         <title>Главная страница</title>
     </head>
-    <body class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white antialiased">
-        <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
+    <body>
+        <div>
             @auth
-            <a href="{{ route('logout') }}" class="">Log out</a>
+            <div  style="float: right">
+                <a href="{{ route('logout') }}" style="margin-right: 15px">Выход</a>
+            </div>
+
+            @if(Auth::user()->isAdmin())
+            <div>
+                <h3 class="text-lg font-medium text-blue-800">Вы администратор!</h3>
+                <p>У вас есть доступ к административным функциям системы</p>
+                <a href="{{ route('admin_panel') }}">Перейти в админ-панель</a>
+            </div>
             @else
-            <a href="{{ route('login') }}" class="">Log in</a>
-            <a href="{{ route('register') }}" class="">Register</a>
+            <h3 class="text-lg font-medium text-blue-800">Вы обычный пользователь!</h3>
+            <p>У вас нет доступа к административным функциям системы</p>
+            @endif
+
+            @else
+            <div  style="float: right">
+                <a href="{{ route('login') }}" style="margin-right: 15px">Вход</a>
+                <a href="{{ route('register') }}" style="margin-right: 15px">Регистрация</a>
+            </div>
             @endauth
         </div>
     </body>
