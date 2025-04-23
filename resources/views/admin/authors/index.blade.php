@@ -31,11 +31,11 @@
                             <td>{{ $author->name }}</td>
                             <td>
                                 <div>
-                                    <a href="{{ route('home', $author->id) }}">Редактировать</a>
-                                    <form action="{{ route('home', $author->id) }}" method="POST">
+                                    <a href="{{ route('admin.authors.edit', $author->id) }}">Редактировать</a>
+                                    <form action="{{ route('admin.authors.destroy', $author->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" onclick="return confirm('Удалить этого автора?')"> Удалить </button>
+                                        <button type="submit" onclick="return confirm('Удалить автора с id {{ $author->id }}?')"> Удалить </button>
                                     </form>
                                 </div>
                             </td>
@@ -43,10 +43,6 @@
                         @endforeach
                     </tbody>
                 </table>
-            </div>
-
-            <div class="mt-4">
-                {{ $authors->links() }}
             </div>
         @endif
     </div>

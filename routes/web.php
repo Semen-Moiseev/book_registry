@@ -4,31 +4,32 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Admin\AuthorController;
 
-Route::get('/', function() {
+Route::GET('/', function() {
     return view('welcome');
 });
 
-Route::get('home', function() {
+Route::GET('home', function() {
     return view('home');
 });
 
-Route::get('/home', [LoginController::class, 'home'])->name('home');
-Route::get('/login', [LoginController::class, 'login'])->name('login');
-Route::get('/register', [LoginController::class, 'register'])->name('register');
+Route::GET('/home', [LoginController::class, 'home'])->name('home');
+Route::GET('/login', [LoginController::class, 'login'])->name('login');
+Route::GET('/register', [LoginController::class, 'register'])->name('register');
 
-Route::post('/login', [LoginController::class, 'authentication'])->name('authentication');
-Route::post('/register', [LoginController::class, 'registerCreate'])->name('registerCreate');
+Route::POST('/login', [LoginController::class, 'authentication'])->name('authentication');
+Route::POST('/register', [LoginController::class, 'registerCreate'])->name('registerCreate');
 
-Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::GET('/logout', [LoginController::class, 'logout'])->name('logout');
 
 //
 //АДМИН-ПАНЕЛЬ
 //
 
-Route::get('/admin_panel', [LoginController::class, 'admin_panel'])->name('admin_panel');
+Route::GET('/admin_panel', [LoginController::class, 'admin_panel'])->name('admin_panel');
 
-//Route::get('/admin.authors.index', [LoginController::class, 'admin_authors_index'])->name('admin.authors.index');
-
-Route::get('admin.authors.index', [AuthorController::class, 'index'])->name('admin.authors.index');
-Route::get('admin.authors.create', [AuthorController::class, 'create'])->name('admin.authors.create');
-Route::post('admin.authors.store', [AuthorController::class, 'store'])->name('admin.authors.store');
+Route::GET('admin.authors.index', [AuthorController::class, 'index'])->name('admin.authors.index');
+Route::GET('admin.authors.create', [AuthorController::class, 'create'])->name('admin.authors.create');
+Route::POST('admin.authors.store', [AuthorController::class, 'store'])->name('admin.authors.store');
+Route::GET('admin.authors.edit/{author}', [AuthorController::class, 'edit'])->name('admin.authors.edit');
+Route::PUT('admin/authors/update/{author}', [AuthorController::class, 'update'])->name('admin.authors.update');
+Route::DELETE('admin.authors.destroy/{author}', [AuthorController::class, 'destroy'])->name('admin.authors.destroy');

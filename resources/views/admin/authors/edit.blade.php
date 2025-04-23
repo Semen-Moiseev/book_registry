@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Создание автора</title>
+    <title>Редактирование автора</title>
 </head>
 <body>
     <div>
-        <h1>_____Создание автора_____</h1>
+        <h1>_____Редактирование автора_____</h1>
 
-        <form action="{{ route('admin.authors.store') }}" method="POST">
+        <form action="{{ route('admin.authors.update', $author->id) }}" method="POST">
             @csrf
+            @method('PUT')
             <div>
                 <label for="name">Имя автора</label>
-                <input type="text" name="name" id="name" required>
+                <input type="text" name="name" id="name" value="{{ $author->name }}" required>
             </div>
 
-            <div >
+            <div>
                 <a href="{{ route('admin.authors.index') }}">Отмена</a>
                 <button type="submit">Сохранить</button>
             </div>

@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class AuthorController extends Controller
 {
     public function index() {
-        $authors = Author::orderBy('name')->paginate(10);
+        $authors = Author::orderBy('id')->paginate(10);
         return view('admin.authors.index', compact('authors'));
     }
 
@@ -36,11 +36,11 @@ class AuthorController extends Controller
         //
     }
 
-    public function edit(Author $author) { //(string $id)
-        return view('home', compact('author'));                             //admin.authors.edit
+    public function edit(Author $author) {
+        return view('admin.authors.edit', compact('author'));
     }
 
-    public function update(Request $request, Author $author) { //(string $id)
+    public function update(Request $request, Author $author) {
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:authors,name,'.$author->id
         ]);
@@ -51,7 +51,7 @@ class AuthorController extends Controller
                ->with('success', 'Автор успешно обновлен');
     }
 
-    public function destroy(Author $author) {  //(string $id)
+    public function destroy(Author $author) {
         $author->delete();
 
         return redirect()->route('admin.authors.index')
