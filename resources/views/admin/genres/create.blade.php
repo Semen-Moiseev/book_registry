@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание автора</title>
+</head>
+<body>
+    <div>
+        <h1>_____Создание жанра_____</h1>
+
+        <form action="{{ route('admin.genres.store') }}" method="POST">
+            @csrf
+            <div>
+                <label for="name">Название жанра</label>
+                <input type="text" name="name" id="name" required>
+            </div>
+
+            <div >
+                <a href="{{ route('admin.genres.index') }}">Отмена</a>
+                <button type="submit">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

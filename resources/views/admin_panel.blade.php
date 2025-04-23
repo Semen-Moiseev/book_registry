@@ -15,8 +15,8 @@
             <ul>
                 <li><a href="{{ route('home') }}"> Главная </a></li>
                 <li><a href="{{ route('admin.authors.index') }}"> Авторы </a></li>
-                <li><a href="{{ route('home') }}"> Книги </a></li>
-                <li><a href="{{ route('home') }}"> Жанры </a></li>
+                <li><a href="{{ route('admin.genres.index') }}"> Жанры </a></li>
+                <li><a href="{{ route('admin.books.index') }}"> Книги </a></li>
                 <li><a href="{{ route('logout') }}">Выход</a></li>
             </ul>
         </nav>
