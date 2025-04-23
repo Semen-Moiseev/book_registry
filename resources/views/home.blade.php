@@ -15,20 +15,23 @@
 
             @if(Auth::user()->isAdmin())
             <div>
-                <h3 class="text-lg font-medium text-blue-800">Вы администратор!</h3>
+                <h3>Вы администратор!</h3>
                 <p>У вас есть доступ к административным функциям системы</p>
                 <a href="{{ route('admin_panel') }}">Перейти в админ-панель</a>
             </div>
+
             @else
-            <h3 class="text-lg font-medium text-blue-800">Вы обычный пользователь!</h3>
-            <p>У вас нет доступа к административным функциям системы</p>
+            <div>
+                <h3>Вы обычный пользователь!</h3>
+                <p>У вас нет доступа к административным функциям системы</p>
+            </div>
             @endif
 
             @else
-            <div  style="float: right">
-                <a href="{{ route('login') }}" style="margin-right: 15px">Вход</a>
-                <a href="{{ route('register') }}" style="margin-right: 15px">Регистрация</a>
-            </div>
+                <div  style="float: right">
+                    <a href="{{ route('login') }}" style="margin-right: 15px">Вход</a>
+                    <a href="{{ route('register') }}" style="margin-right: 15px">Регистрация</a>
+                </div>
             @endauth
         </div>
     </body>

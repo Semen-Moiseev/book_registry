@@ -8,14 +8,12 @@ use Illuminate\Http\Request;
 class AuthorController extends Controller
 {
     // GET /api/authors -> Получить список авторов
-    public function index()
-    {
+    public function index() {
         return Author::all();
     }
 
     // POST /api/authors -> Создание автора
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $validated = $request->validate(['name' => 'required|string|max:255']);
 
         try {
@@ -34,14 +32,12 @@ class AuthorController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Author $author)
-    {
+    public function show(Author $author) {
         //
     }
 
     // PUT /api/authors/{id} -> Обновление данных автора с определенным id
-    public function update(Request $request, Author $author)
-    {
+    public function update(Request $request, Author $author) {
         $request->validate(['name' => 'sometimes|string|max:255']);
 
         try {
@@ -55,8 +51,7 @@ class AuthorController extends Controller
     }
 
     // DELETE /api/authors/{id} -> Удаление автора с определенным id
-    public function destroy(Author $author)
-    {
+    public function destroy(Author $author) {
         try {
             $author->delete();
             return response()->json(null, 204);

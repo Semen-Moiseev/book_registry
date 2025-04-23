@@ -38,6 +38,10 @@ class LoginController extends Controller
         return redirect('/');
     }
 
+    //
+    //АДМИН-ПАНЕЛЬ
+    //
+
     public function admin_panel(Request $request) {
         return view('admin_panel');
     }

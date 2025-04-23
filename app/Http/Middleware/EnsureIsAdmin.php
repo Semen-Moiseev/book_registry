@@ -15,7 +15,7 @@ class EnsureIsAdmin
         }
 
         if (!auth()->user()->isAdmin()) { // Авторизован, но не админ
-            return redirect()->route('dashboard')->with('error', 'Доступ только для администраторов'); //
+            return redirect()->route('home')->with('error', 'Доступ только для администраторов');
         }
 
         return $next($request);
