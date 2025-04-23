@@ -7,22 +7,30 @@
 </head>
 <body>
     <div>
-        <div>
-            <h1>_____Список книг_____</h1>
-            <a href="{{ route('admin.books.create') }}">Добавить автора</a>
-        </div>
+        <h1>_____Список книг_____</h1>
+
+        <!-- Форма поиска -->
+        <form action="{{ route('admin.books.search') }}" method="GET">
+            <div>
+                <input type="text" name="search"
+                placeholder="Поиск по названию..." value="{{ $search ?? '' }}">
+                <button type="submit">Поиск</button>
+            </div>
+        </form><br>
+
+        <a href="{{ route('admin.books.create') }}">Добавить книгу</a>
 
         @if($books->isEmpty())
-            <p>Авторы не найдены</p>
+            <p>Книги не найдены</p>
         @else
             <div>
                 <table>
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Название</th>
+                            <th>Название книги</th>
                             <th>id автора</th>
-                            <th>Тип</th>
+                            <th>Тип книги</th>
                             <th>Действия</th>
                         </tr>
                     </thead>
@@ -47,6 +55,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                {{ $books->links() }}
             </div>
         @endif
     </div>

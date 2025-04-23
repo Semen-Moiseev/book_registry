@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Book;
+use App\Models\Author;
 use App\Enums\BookType;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -11,8 +12,18 @@ use Illuminate\Validation\Rule;
 class BookController extends Controller
 {
     public function index() {
-        $books = Book::orderBy('id')->paginate(10);
+        $books = Book::orderBy('title')->paginate(10);
         return view('admin.books.index', compact('books'));
+    }
+
+    public function search(Request $request) {
+        $search = $request->input('search');
+
+        $books = Book::when($search, function($query) use ($search) {
+            return $query->where('title', 'like', "%{$search}%");
+        })->paginate(10)->appends(['search' => $search]);
+
+        return view('admin.books.index', compact('books', 'search'));
     }
 
     public function create() {

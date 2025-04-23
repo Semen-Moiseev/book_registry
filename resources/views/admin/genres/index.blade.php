@@ -13,14 +13,14 @@
         </div>
 
         @if($genres->isEmpty())
-            <p>Авторы не найдены</p>
+            <p>Жанры не найдены</p>
         @else
             <div>
                 <table>
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Название</th>
+                            <th>Название жанра</th>
                             <th>Действия</th>
                         </tr>
                     </thead>

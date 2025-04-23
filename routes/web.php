@@ -49,3 +49,5 @@ Route::POST('admin.books.store', [BookController::class, 'store'])->name('admin.
 Route::GET('admin.books.edit/{book}', [BookController::class, 'edit'])->name('admin.books.edit');
 Route::PUT('admin.books.update/{book}', [BookController::class, 'update'])->name('admin.books.update');
 Route::DELETE('admin.books.destroy/{book}', [BookController::class, 'destroy'])->name('admin.books.destroy');
+
+Route::GET('admin.books.search', [BookController::class, 'search'])->name('admin.books.search');
