@@ -7,6 +7,10 @@
 </head>
 <body>
     <div>
+        <div  style="float: right">
+            <a href="{{ route('admin.authors.index') }}" style="margin-right: 15px">Назад</a>
+        </div>
+
         <h1>_____Создание автора_____</h1>
 
         <form action="{{ route('admin.authors.store') }}" method="POST">

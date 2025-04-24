@@ -7,6 +7,10 @@
 </head>
 <body>
     <div>
+        <div  style="float: right">
+            <a href="{{ route('admin.genres.index') }}" style="margin-right: 15px">Назад</a>
+        </div>
+
         <h1>_____Редактирование жанра_____</h1>
 
         <form action="{{ route('admin.genres.update', $genre->id) }}" method="POST">

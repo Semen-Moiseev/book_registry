@@ -9,9 +9,24 @@ use App\Models\Genre;
 use App\Enums\BookType;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 
 class BookController extends Controller
 {
+    // Форматирование лог-сообщения
+    private function logAction(string $action, Book $book): void {
+        $message = sprintf(
+            "Book %s: ID %d - '%s' (Type: %s, Author ID: %d)",
+            $action,
+            $book->id,
+            $book->title,
+            $book->type->value,
+            $book->author_id
+        );
+
+        Log::channel('books')->info($message);
+    }
+
     public function index() {
         $books = Book::with(['author', 'genres'])->orderBy('title')->paginate(10);
         return view('admin.books.index', compact('books'));
@@ -43,22 +58,28 @@ class BookController extends Controller
             'genres.*' => 'exists:genres,id'
         ]);
 
-        $book = Book::create($validated);
+        try {
+            if (Book::where('title', $validated['title']) //Проверка уникальности книги с учетом автора
+            ->where('author_id', $validated['author_id'])
+            ->exists()) {
+                throw new \Exception('Книга с таким названием у этого автора уже существует');
+            }
 
-        if (isset($validated['genres'])) {
-            $book->genres()->attach($request->genres);
+            $book = Book::create($validated);
+
+            if (isset($validated['genres'])) {
+                $book->genres()->attach($request->genres);
+            }
+
+            $this->logAction('created', $book);
+
+            return redirect()->route('admin.books.index')
+            ->with('success', 'Книга успешно добавлена');
         }
-
-        return redirect()->route('admin.books.index')
-        ->with('success', 'Книга успешно добавлена');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        catch (\Exception $e) {
+            Log::channel('books')->error("Create failed: " . $e->getMessage());
+            return redirect()->route('admin.books.index');
+        }
     }
 
     public function edit(Book $book) {
@@ -77,19 +98,33 @@ class BookController extends Controller
             'genres.*' => 'exists:genres,id'
         ]);
 
-        $book->update($validated);
+        try {
+            $book->update($validated);
 
-        if (isset($validated['genres'])) {
-            $book->genres()->sync($validated['genres']);
+            if (isset($validated['genres'])) {
+                $book->genres()->sync($validated['genres']);
+            }
+
+            $this->logAction('updated', $book);
+
+            return redirect()->route('admin.books.index')->with('success', 'Книга успешно обновлена');
         }
-
-        return redirect()->route('admin.books.index')->with('success', 'Книга успешно обновлена');
+        catch (\Exception $e) {
+            Log::channel('books')->error("Update failed for book {$book->id}: " . $e->getMessage());
+            return redirect()->route('admin.books.index');
+        }
     }
 
     public function destroy(Book $book) {
-        $book->delete();
-
-        return redirect()->route('admin.books.index')
-        ->with('success', 'Книга успешно удалена');
+        try {
+            $book->delete();
+            $this->logAction('deleted', $book);
+            return redirect()->route('admin.books.index')
+            ->with('success', 'Книга успешно удалена');
+        }
+        catch (\Exception $e) {
+            Log::channel('books')->error("Delete failed for book {$book->id}: " . $e->getMessage());
+            return redirect()->route('admin.books.index');
+        }
     }
 }

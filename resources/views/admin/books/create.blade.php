@@ -7,6 +7,10 @@
 </head>
 <body>
     <div>
+        <div  style="float: right">
+            <a href="{{ route('admin.books.index') }}" style="margin-right: 15px">Назад</a>
+        </div>
+
         <h1>_____Создание книги_____</h1>
 
         <form action="{{ route('admin.books.store') }}" method="POST">

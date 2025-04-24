@@ -7,10 +7,12 @@
 </head>
 <body>
     <div>
-        <div>
-            <h1>_____Список авторов_____</h1>
-            <a href="{{ route('admin.authors.create') }}">Добавить автора</a>
+        <div  style="float: right">
+            <a href="{{ route('admin_panel') }}" style="margin-right: 15px">Назад</a>
         </div>
+
+        <h1>_____Список авторов_____</h1>
+        <a href="{{ route('admin.authors.create') }}">Добавить автора</a>
 
         @if($authors->isEmpty())
             <p>Авторы не найдены</p>
@@ -19,17 +21,17 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Имя</th>
-                            <th>Действия</th>
+                            <th style="border: 1px solid #000; padding: 10px; text-align: center">ID</th>
+                            <th style="border: 1px solid #000; padding: 10px; text-align: center">Имя</th>
+                            <th style="border: 1px solid #000; padding: 10px; text-align: center">Действия</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($authors as $author)
                         <tr>
-                            <td>{{ $author->id }}</td>
-                            <td>{{ $author->name }}</td>
-                            <td>
+                            <td style="border: 1px solid #000; padding: 10px; text-align: center">{{ $author->id }}</td>
+                            <td style="border: 1px solid #000; padding: 10px; text-align: center">{{ $author->name }}</td>
+                            <td style="border: 1px solid #000; padding: 10px; text-align: center">
                                 <div>
                                     <a href="{{ route('admin.authors.edit', $author->id) }}">Редактировать</a>
                                     <form action="{{ route('admin.authors.destroy', $author->id) }}" method="POST">

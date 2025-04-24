@@ -59,14 +59,6 @@ class BookController extends Controller
             Log::channel('books')->error("Create failed: " . $e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
         }
-
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Book $book) {
-        //
     }
 
     // PUT /api/books/{id} -> Обновление книги с определенным id
@@ -94,7 +86,6 @@ class BookController extends Controller
             Log::channel('books')->error("Update failed for book {$book->id}: " . $e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
         }
-
     }
 
     // DELETE /api/books/{id} -> Удаление книги с определенным id
