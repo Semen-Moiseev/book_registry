@@ -41,7 +41,11 @@
                             <td>{{ $book->id }}</td>
                             <td>{{ $book->title }}</td>
                             <td>{{ $book->author->name }}</td>
-                            <td></td>
+                            <td>
+                                @foreach($book->genres as $genre)
+                                    <span>{{ $genre->name }}<br></span>
+                                @endforeach
+                            </td>
                             <td>{{ $book->type }}</td>
                             <td>
                                 <div>

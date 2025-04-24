@@ -11,8 +11,7 @@ class Genre extends Model
 
     // Связь: один жанр -> много книг
     // через промежуточную таблицу
-    public function books(): BelongsToMany
-    {
+    public function books(): BelongsToMany {
         return $this->belongsToMany(Book::class);
     }
 }

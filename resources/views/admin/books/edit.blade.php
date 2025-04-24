@@ -18,12 +18,28 @@
                     <input type="text" name="title" id="title" value="{{ $book->title }}" required>
                 </p>
                 <p>
-                    <label for="author_id">id автора</label>
-                    <input type="text" name="author_id" id="author_id" value="{{ $book->author_id }}" required>
+                    <label for="author_id">Автор</label>
+                    <select name="author_id" required>
+                        @foreach($authors as $author)
+                            <option value="{{ $author->id }}" {{ $book->author_id == $author->id ? 'selected' : '' }}>{{ $author->name }}</option>
+                        @endforeach
+                    </select>
                 </p>
                 <p>
-                    <label for="type">Тип книги (print, graphic, digital)</label>
-                    <input type="text" name="type" id="type" value="{{ $book->type }}" required>
+                    <label for="genres[]">Жанры</label>
+                    <select name="genres[]" multiple required>
+                        @foreach($genres as $genre)
+                            <option value="{{ $genre->id }}" {{ $book->genres->contains($genre->id) ? 'selected' : '' }}>{{ $genre->name }}</option>
+                        @endforeach
+                    </select>
+                </p>
+                <p>
+                    <label for="type">Тип книги</label>
+                    <select name="type" required>
+                        <option value="graphic">Графический</option>
+                        <option value="digital">Цифровой</option>
+                        <option value="print">Печатный</option>
+                    </select>
                 </p>
             </div>
 

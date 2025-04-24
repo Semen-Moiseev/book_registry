@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Book;
 use App\Models\Author;
+use App\Models\Genre;
 use App\Enums\BookType;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -27,7 +28,10 @@ class BookController extends Controller
     }
 
     public function create() {
-        return view('admin.books.create');
+        $authors = Author::all();
+        $genres = Genre::all();
+
+        return view('admin.books.create', compact('authors', 'genres'));
     }
 
     public function store(Request $request) {
@@ -39,7 +43,11 @@ class BookController extends Controller
             'genres.*' => 'exists:genres,id'
         ]);
 
-        Book::create($validated);
+        $book = Book::create($validated);
+
+        if (isset($validated['genres'])) {
+            $book->genres()->attach($request->genres);
+        }
 
         return redirect()->route('admin.books.index')
         ->with('success', 'Книга успешно добавлена');
@@ -54,7 +62,10 @@ class BookController extends Controller
     }
 
     public function edit(Book $book) {
-        return view('admin.books.edit', compact('book'));
+        $authors = Author::all();
+        $genres = Genre::all();
+
+        return view('admin.books.edit', compact('book', 'authors', 'genres'));
     }
 
     public function update(Request $request, Book $book) {
@@ -67,6 +78,10 @@ class BookController extends Controller
         ]);
 
         $book->update($validated);
+
+        if (isset($validated['genres'])) {
+            $book->genres()->sync($validated['genres']);
+        }
 
         return redirect()->route('admin.books.index')->with('success', 'Книга успешно обновлена');
     }

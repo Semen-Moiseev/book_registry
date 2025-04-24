@@ -17,14 +17,12 @@ class Book extends Model
     ];
 
     // Связь: одна книга -> один автор
-    public function author(): BelongsTo
-    {
+    public function author(): BelongsTo {
         return $this->belongsTo(Author::class);
     }
 
     // Связь: одна книга -> много жанров
-    public function genres(): BelongsToMany
-    {
+    public function genres(): BelongsToMany {
         return $this->belongsToMany(Genre::class);
     }
 }
