@@ -12,7 +12,7 @@ use Illuminate\Validation\Rule;
 class BookController extends Controller
 {
     public function index() {
-        $books = Book::orderBy('title')->paginate(10);
+        $books = Book::with(['author', 'genres'])->orderBy('title')->paginate(10);
         return view('admin.books.index', compact('books'));
     }
 

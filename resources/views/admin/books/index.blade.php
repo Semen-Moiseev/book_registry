@@ -29,7 +29,8 @@
                         <tr>
                             <th>ID</th>
                             <th>Название книги</th>
-                            <th>id автора</th>
+                            <th>Автор</th>
+                            <th>Жанр</th>
                             <th>Тип книги</th>
                             <th>Действия</th>
                         </tr>
@@ -39,7 +40,8 @@
                         <tr>
                             <td>{{ $book->id }}</td>
                             <td>{{ $book->title }}</td>
-                            <td>{{ $book->author_id }}</td>
+                            <td>{{ $book->author->name }}</td>
+                            <td></td>
                             <td>{{ $book->type }}</td>
                             <td>
                                 <div>
