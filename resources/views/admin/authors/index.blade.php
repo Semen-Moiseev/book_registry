@@ -23,6 +23,7 @@
                         <tr>
                             <th style="border: 1px solid #000; padding: 10px; text-align: center">ID</th>
                             <th style="border: 1px solid #000; padding: 10px; text-align: center">Имя</th>
+                            <th style="border: 1px solid #000; padding: 10px; text-align: center">Количество книг</th>
                             <th style="border: 1px solid #000; padding: 10px; text-align: center">Действия</th>
                         </tr>
                     </thead>
@@ -31,6 +32,9 @@
                         <tr>
                             <td style="border: 1px solid #000; padding: 10px; text-align: center">{{ $author->id }}</td>
                             <td style="border: 1px solid #000; padding: 10px; text-align: center">{{ $author->name }}</td>
+                            <td style="border: 1px solid #000; padding: 10px; text-align: center">
+                                <span> {{ $author->books_count }} </span>
+                            </td>
                             <td style="border: 1px solid #000; padding: 10px; text-align: center">
                                 <div>
                                     <a href="{{ route('admin.authors.edit', $author->id) }}">Редактировать</a>

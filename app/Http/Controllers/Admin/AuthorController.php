@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class AuthorController extends Controller
 {
     public function index() {
-        $authors = Author::orderBy('id')->paginate(10);
+        $authors = Author::withCount('books')->orderBy('id')->paginate(10);
         return view('admin.authors.index', compact('authors'));
     }
 
@@ -26,14 +26,6 @@ class AuthorController extends Controller
 
         return redirect()->route('admin.authors.index')
             ->with('success', 'Автор успешно добавлен');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     public function edit(Author $author) {

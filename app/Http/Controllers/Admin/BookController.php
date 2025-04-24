@@ -27,9 +27,29 @@ class BookController extends Controller
         Log::channel('books')->info($message);
     }
 
-    public function index() {
-        $books = Book::with(['author', 'genres'])->orderBy('title')->paginate(10);
-        return view('admin.books.index', compact('books'));
+    public function index(Request $request) {
+        $query = Book::with(['author', 'genres']);
+
+        // Фильтрация по автору
+        if ($request->has('author_id') && $request->author_id) {
+            $query = Book::with(['author', 'genres'])
+                ->where('author_id', $request->author_id);
+        }
+
+        // Фильтрация по жанрам
+        if ($request->filled('genre_ids')) {
+            $genreIds = is_array($request->genre_ids) ? $request->genre_ids
+                : explode(',', $request->genre_ids);
+
+            $query->whereHas('genres', function($q) use ($genreIds) {
+                $q->whereIn('id', $genreIds);
+            });
+        }
+
+        $books = $query->orderBy('title')->paginate(10);
+        $authors = Author::all();
+        $genres = Genre::all();
+        return view('admin.books.index', compact('books', 'authors', 'genres'));
     }
 
     public function search(Request $request) {

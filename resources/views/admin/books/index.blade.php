@@ -22,6 +22,42 @@
             </div>
         </form><br>
 
+        <!-- Форма фильтрации -->
+        <form method="GET" action="{{ route('admin.books.index') }}">
+            <div>
+                Фильтрация по автору:
+                <div>
+                    <label>Автор</label>
+                    <select name="author_id">
+                        <option value="">Все авторы</option>
+                        @foreach($authors as $author)
+                            <option value="{{ $author->id }}"
+                                {{ request('author_id') == $author->id ? 'selected' : '' }}>
+                                {{ $author->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div><br>
+
+                Фильтрация по жанрам:
+                <div>
+                    <label>Жанры</label>
+                    <select name="genre_ids[]" multiple>
+                        @foreach($genres as $genre)
+                            <option value="{{ $genre->id }}" {{ in_array($genre->id, (array)request('genre_ids')) ? 'selected' : '' }}>
+                                {{ $genre->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div><br>
+
+                <div>
+                    <button type="submit">Фильтровать</button>
+                    <a href="{{ route('admin.books.index') }}">Сбросить</a>
+                </div>
+            </div>
+        </form><br>
+
         <a href="{{ route('admin.books.create') }}">Добавить книгу</a>
 
         @if($books->isEmpty())
@@ -36,6 +72,7 @@
                             <th style="border: 1px solid #000; padding: 10px; text-align: center">Автор</th>
                             <th style="border: 1px solid #000; padding: 10px; text-align: center">Жанр</th>
                             <th style="border: 1px solid #000; padding: 10px; text-align: center">Тип книги</th>
+                            <th style="border: 1px solid #000; padding: 10px; text-align: center">Дата добавления</th>
                             <th style="border: 1px solid #000; padding: 10px; text-align: center">Действия</th>
                         </tr>
                     </thead>
@@ -51,6 +88,7 @@
                                 @endforeach
                             </td>
                             <td style="border: 1px solid #000; padding: 10px; text-align: center">{{ $book->type }}</td>
+                            <td style="border: 1px solid #000; padding: 10px; text-align: center">{{ $book->created_at->format('d.m.Y') }}</td>
                             <td style="border: 1px solid #000; padding: 10px; text-align: center">
                                 <div>
                                     <a href="{{ route('admin.books.edit', $book->id) }}">Редактировать</a>
