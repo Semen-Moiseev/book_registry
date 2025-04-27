@@ -8,8 +8,31 @@ use Illuminate\Http\Request;
 class AuthorController extends Controller
 {
     // GET /api/authors -> Получить список авторов
-    public function index() {
-        return Author::all();
+    public function index(Request $request) {
+        $perPage = $request->input('per_page', 10);
+
+        // Получаем авторов с количеством книг
+        $authors = Author::withCount('books')
+            ->paginate($perPage);
+
+        return response()->json($authors);
+    }
+
+    // GET /api/authors/{id} -> Получить автора по id
+    public function show($id) {
+        $author = Author::with('books')->find($id);
+
+        if (!$author) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Автор не найден'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $author
+        ]);
     }
 
     // POST /api/authors -> Создание автора
@@ -27,13 +50,6 @@ class AuthorController extends Controller
         catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Author $author) {
-        //
     }
 
     // PUT /api/authors/{id} -> Обновление данных автора с определенным id

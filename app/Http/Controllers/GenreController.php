@@ -10,14 +10,18 @@ use Illuminate\Support\Facades\Validator;
 class GenreController extends Controller
 {
     // GET /api/genre -> Получить список жанров
-    public function index()
-    {
-        return Genre::all();
+    public function index(Request $request) {
+        $perPage = $request->input('per_page', 10);
+
+        // Получаем жанры с книгами
+        $genres = Genre::with('books')
+            ->paginate($perPage);
+
+        return response()->json($genres);
     }
 
     // POST /api/genre -> Создание жанра
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $validated = $request->validate(['name' => 'required|string|max:255']);
 
         try {
@@ -33,17 +37,8 @@ class GenreController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Genre $genre)
-    {
-        //
-    }
-
     // PUT /api/genre/{id} -> Обновление жанра с определенным id
-    public function update(Request $request, Genre $genre)
-    {
+    public function update(Request $request, Genre $genre) {
         $request->validate(['name' => 'sometimes|string|max:255']);
 
         try {

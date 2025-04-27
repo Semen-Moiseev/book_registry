@@ -24,8 +24,32 @@ class BookController extends Controller
     }
 
     // GET /api/books -> Получить список книг
-    public function index() {
-        return Book::with(['author', 'genres'])->get();
+    public function index(Request $request) {
+        $perPage = $request->input('per_page', 10);
+
+        // Получаем книги с авторами
+        $books = Book::with('author', 'genres')
+            ->orderBy('title')
+            ->paginate($perPage);
+
+        return response()->json($books);
+    }
+
+    // GET /api/books/{id} -> Получить книгу по id
+    public function show($id) {
+        $book = Book::with('author', 'genres')->find($id);
+
+        if (!$book) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Книга не найдена'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $book
+        ]);
     }
 
     // POST /api/books -> Создание книги
