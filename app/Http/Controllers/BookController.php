@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Enums\BookType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
@@ -87,15 +88,29 @@ class BookController extends Controller
 
     // PUT /api/books/{id} -> Обновление книги с определенным id
     public function update(Request $request, Book $book) {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'author_id' => 'required|exists:authors,id',
-            'type' => 'required|in:graphic,digital,print',
-            'genres' => 'array',
-            'genres.*' => 'exists:genres,id'
-        ]);
-
         try {
+            if (!Auth::check()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Требуется авторизация'
+                ], 401);
+            }
+
+            if (Auth::user()->cannot('delete', $book)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Вы не автор этой книги'
+                ], 403);
+            }
+
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'author_id' => 'required|exists:authors,id',
+                'type' => 'required|in:graphic,digital,print',
+                'genres' => 'array',
+                'genres.*' => 'exists:genres,id'
+            ]);
+
             $book->update($validated);
 
             if (isset($validated['genres'])) {
@@ -104,7 +119,10 @@ class BookController extends Controller
 
             $this->logAction('updated', $book);
 
-            return $book;
+            return response()->json([
+                'success' => true,
+                'data' => $book->fresh() // Возвращаем обновленные данные
+            ]);
         }
         catch (\Exception $e) {
             Log::channel('books')->error("Update failed for book {$book->id}: " . $e->getMessage());
@@ -115,9 +133,27 @@ class BookController extends Controller
     // DELETE /api/books/{id} -> Удаление книги с определенным id
     public function destroy(Book $book) {
         try {
+            if (!Auth::check()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Требуется авторизация'
+                ], 401);
+            }
+
+            if (Auth::user()->cannot('delete', $book)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Вы не автор этой книги'
+                ], 403);
+            }
+
             $book->delete();
             $this->logAction('deleted', $book);
-            return response()->json(null, 204);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Книга успешно удалена!'
+            ]);
         }
         catch (\Exception $e) {
             Log::channel('books')->error("Delete failed for book {$book->id}: " . $e->getMessage());

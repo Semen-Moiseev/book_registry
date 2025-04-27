@@ -18,7 +18,7 @@ class Book extends Model
 
     // Связь: одна книга -> один автор
     public function author(): BelongsTo {
-        return $this->belongsTo(Author::class);
+        return $this->belongsTo(Author::class, 'author_id');
     }
 
     // Связь: одна книга -> много жанров
