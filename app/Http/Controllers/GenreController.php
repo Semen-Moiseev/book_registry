@@ -13,18 +13,16 @@ class GenreController extends Controller
     public function index(Request $request) {
         $perPage = $request->input('per_page', 10);
 
-        // Получаем жанры с книгами
         $genres = Genre::with('books')
             ->paginate($perPage);
-
         return response()->json($genres);
     }
 
     // POST /api/genre -> Создание жанра
     public function store(Request $request) {
-        $validated = $request->validate(['name' => 'required|string|max:255']);
-
         try {
+            $validated = $request->validate(['name' => 'required|string|max:255']);
+
             if (Genre::where('name', $validated['name'])->exists()) {
                 throw new \Exception('Жанр с таким названием уже существует');
             }
@@ -39,9 +37,9 @@ class GenreController extends Controller
 
     // PUT /api/genre/{id} -> Обновление жанра с определенным id
     public function update(Request $request, Genre $genre) {
-        $request->validate(['name' => 'sometimes|string|max:255']);
-
         try {
+            $request->validate(['name' => 'sometimes|string|max:255']);
+
             $genre->update($request->all());
             return $genre;
         }
@@ -51,8 +49,7 @@ class GenreController extends Controller
     }
 
     // DELETE /api/genre/{id} -> Удаление жанра с определенным id
-    public function destroy(Genre $genre)
-    {
+    public function destroy(Genre $genre) {
         try {
             $genre->delete();
             return response()->json(null, 204);

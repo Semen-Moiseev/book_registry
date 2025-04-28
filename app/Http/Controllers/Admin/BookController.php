@@ -27,6 +27,7 @@ class BookController extends Controller
         Log::channel('books')->info($message);
     }
 
+    // GET /api/books -> Получить список книг
     public function index(Request $request) {
         $query = Book::with(['author', 'genres']);
 
@@ -52,6 +53,7 @@ class BookController extends Controller
         return view('admin.books.index', compact('books', 'authors', 'genres'));
     }
 
+    // Поиск по названию книги
     public function search(Request $request) {
         $search = $request->input('search');
 
@@ -59,9 +61,12 @@ class BookController extends Controller
             return $query->where('title', 'like', "%{$search}%");
         })->paginate(10)->appends(['search' => $search]);
 
-        return view('admin.books.index', compact('books', 'search'));
+        $authors = Author::all();
+        $genres = Genre::all();
+        return view('admin.books.index', compact('books', 'search', 'authors', 'genres'));
     }
 
+    //Переход на страницу создания книги
     public function create() {
         $authors = Author::all();
         $genres = Genre::all();
@@ -69,17 +74,18 @@ class BookController extends Controller
         return view('admin.books.create', compact('authors', 'genres'));
     }
 
+    // POST /api/books -> Создание книги
     public function store(Request $request) {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255|unique:books',
-            'author_id' => 'required|exists:authors,id',
-            'type' => 'required|in:graphic,digital,print',
-            'genres' => 'sometimes|array',
-            'genres.*' => 'exists:genres,id'
-        ]);
+            try {
+                $validated = $request->validate([
+                'title' => 'required|string|max:255|unique:books',
+                'author_id' => 'required|exists:authors,id',
+                'type' => 'required|in:graphic,digital,print',
+                'genres' => 'sometimes|array',
+                'genres.*' => 'exists:genres,id'
+            ]);
 
-        try {
-            if (Book::where('title', $validated['title']) //Проверка уникальности книги с учетом автора
+            if (Book::where('title', $validated['title']) //Проверка уникальности книги
             ->where('author_id', $validated['author_id'])
             ->exists()) {
                 throw new \Exception('Книга с таким названием у этого автора уже существует');
@@ -102,23 +108,24 @@ class BookController extends Controller
         }
     }
 
+    //Переход на страницу изменения данных книги
     public function edit(Book $book) {
         $authors = Author::all();
         $genres = Genre::all();
-
         return view('admin.books.edit', compact('book', 'authors', 'genres'));
     }
 
+    // PUT /api/books/{id} -> Обновление книги с определенным id
     public function update(Request $request, Book $book) {
-        $validated = $request->validate([
-            'title' => 'sometimes|string|max:255|unique:books,title,'.$book->id,
-            'author_id' => 'sometimes|exists:authors,id',
-            'type' => 'required|in:graphic,digital,print',
-            'genres' => 'sometimes|array',
-            'genres.*' => 'exists:genres,id'
-        ]);
+            try {
+                $validated = $request->validate([
+                'title' => 'sometimes|string|max:255|unique:books,title,'.$book->id,
+                'author_id' => 'sometimes|exists:authors,id',
+                'type' => 'required|in:graphic,digital,print',
+                'genres' => 'sometimes|array',
+                'genres.*' => 'exists:genres,id'
+            ]);
 
-        try {
             $book->update($validated);
 
             if (isset($validated['genres'])) {
@@ -135,6 +142,7 @@ class BookController extends Controller
         }
     }
 
+    // DELETE /api/books/{id} -> Удаление книги с определенным id
     public function destroy(Book $book) {
         try {
             $book->delete();

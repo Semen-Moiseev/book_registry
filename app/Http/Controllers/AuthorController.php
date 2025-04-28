@@ -15,10 +15,8 @@ class AuthorController extends Controller
     public function index(Request $request) {
         $perPage = $request->input('per_page', 10);
 
-        // Получаем авторов с количеством книг
         $authors = Author::withCount('books')
             ->paginate($perPage);
-
         return response()->json($authors);
     }
 
@@ -41,9 +39,9 @@ class AuthorController extends Controller
 
     // POST /api/authors -> Создание автора
     public function store(Request $request) {
-        $validated = $request->validate(['name' => 'required|string|max:255']);
-
         try {
+            $validated = $request->validate(['name' => 'required|string|max:255']);
+
             if (Author::where('name', $validated['name'])->exists()) {
                 throw new \Exception('Автор с таким именем уже существует');
             }
@@ -58,17 +56,17 @@ class AuthorController extends Controller
 
     // PUT /api/authors/{id} -> Обновление данных автора с определенным id
     public function update(Request $request, Author $author) {
-        if (!Auth::check()) {
-            return response()->json(['message' => 'Требуется авторизация'], 401);
-        }
-
-        if (Gate::denies('update', $author)) {
-            return response()->json(['message' => 'Вы можете редактировать только свой профиль'], 403);
-        }
-
-        $request->validate(['name' => 'sometimes|string|max:255']);
-
         try {
+            if (!Auth::check()) {
+                return response()->json(['message' => 'Требуется авторизация'], 401);
+            }
+
+            if (Gate::denies('update', $author)) {
+                return response()->json(['message' => 'Вы можете редактировать только свой профиль'], 403);
+            }
+
+            $request->validate(['name' => 'sometimes|string|max:255']);
+
             $author->update($request->all());
 
             $response = app(UserController::class)->update($request, $author->id); //Передать сюда юсера НАДО

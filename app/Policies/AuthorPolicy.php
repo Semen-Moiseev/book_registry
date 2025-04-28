@@ -9,6 +9,6 @@ use Illuminate\Auth\Access\Response;
 class AuthorPolicy
 {
     public function update(User $user, Author $author) {
-        return $user->id === $author->id;
+        return $user->id-1 === $author->id;
     }
 }

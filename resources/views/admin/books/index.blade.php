@@ -14,7 +14,7 @@
         <h1>_____Список книг_____</h1>
 
         <!-- Форма поиска -->
-        <form action="{{ route('admin.books.search') }}" method="GET">
+        <form method="GET" action="{{ route('admin.books.search') }}">
             <div>
                 <input type="text" name="search"
                 placeholder="Поиск по названию..." value="{{ $search ?? '' }}">

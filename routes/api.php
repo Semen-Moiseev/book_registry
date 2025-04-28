@@ -15,12 +15,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/books/{id}', [BookController::class, 'show']);
-Route::get('/authors', [AuthorController::class, 'index']);
-Route::get('/authors/{id}', [AuthorController::class, 'show']);
-Route::get('/genres', [GenreController::class, 'index']);
+Route::POST('/login', [AuthController::class, 'login']);
+Route::GET('/books/{id}', [BookController::class, 'show']);
+Route::GET('/authors', [AuthorController::class, 'index']);
+Route::GET('/authors/{id}', [AuthorController::class, 'show']);
+Route::GET('/genres', [GenreController::class, 'index']);
 
-Route::put('/books/{book}', [BookController::class, 'update'])->middleware('auth:sanctum');
-Route::delete('/books/{book}', [BookController::class, 'destroy'])->middleware('auth:sanctum');
-Route::put('/authors/{author}', [AuthorController::class, 'update'])->middleware('auth:sanctum');
+Route::PUT('/books/{book}', [BookController::class, 'update'])->middleware('auth:sanctum');
+Route::DELETE('/books/{book}', [BookController::class, 'destroy'])->middleware('auth:sanctum');
+Route::PUT('/authors/{author}', [AuthorController::class, 'update'])->middleware('auth:sanctum');

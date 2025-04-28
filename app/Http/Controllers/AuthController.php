@@ -8,9 +8,7 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    // Метод для входа пользователя
     public function login(Request $request) {
-        // Валидация данных
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',

@@ -28,7 +28,7 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-     // Является ли пользователь администратором
+    // Является ли пользователь администратором
     public function isAdmin(): bool {
         return $this->role === 'admin';
     }

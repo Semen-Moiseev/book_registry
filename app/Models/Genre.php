@@ -10,7 +10,6 @@ class Genre extends Model
     protected $fillable = ['name'];
 
     // Связь: один жанр -> много книг
-    // через промежуточную таблицу
     public function books(): BelongsToMany {
         return $this->belongsToMany(Book::class);
     }

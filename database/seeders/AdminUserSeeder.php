@@ -18,15 +18,5 @@ class AdminUserSeeder extends Seeder
             'password' => Hash::make('root'),
             'role' => 'admin'
         ]);
-
-        // Создаем тестового пользователя (автора)
-        User::create([
-            'name' => 'Пользователь',
-            'email' => 'user@user.ru',
-            'password' => Hash::make('password'),
-            'role' => 'user'
-        ]);
-
-        Author::create(['name' => 'Пользователь']);
     }
 }

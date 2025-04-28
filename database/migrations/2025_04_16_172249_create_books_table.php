@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
-            $table->string('title'); // Название книги
+            $table->string('title');
             $table->foreignId('author_id')->constrained(); // Связь с автором
             $table->string('type'); // Тип книги (enum: graphic/digital/print)
             $table->timestamps();

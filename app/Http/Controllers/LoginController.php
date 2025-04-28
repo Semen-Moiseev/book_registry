@@ -28,8 +28,8 @@ class LoginController extends Controller
     }
 
     public function registerCreate(Request $request) {
-        User::create($request->only(['name', 'email', 'password'])); // Создание пользователя
-        Author::create($request->only(['name'])); // Создание автора
+        User::create($request->only(['name', 'email', 'password']));
+        Author::create($request->only(['name']));
         return redirect('login');
     }
 

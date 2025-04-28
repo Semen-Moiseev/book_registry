@@ -28,11 +28,9 @@ class BookController extends Controller
     public function index(Request $request) {
         $perPage = $request->input('per_page', 10);
 
-        // Получаем книги с авторами
         $books = Book::with('author', 'genres')
             ->orderBy('title')
             ->paginate($perPage);
-
         return response()->json($books);
     }
 
@@ -64,7 +62,7 @@ class BookController extends Controller
         ]);
 
         try {
-            if (Book::where('title', $validated['title']) //Проверка уникальности книги с учетом автора
+            if (Book::where('title', $validated['title']) //Проверка уникальности книги
             ->where('author_id', $validated['author_id'])
             ->exists()) {
                 throw new \Exception('Книга с таким названием у этого автора уже существует');
@@ -72,12 +70,11 @@ class BookController extends Controller
 
             $book = Book::create($validated);
 
-            if (isset($validated['genres'])) { //Проверка есть ли жанр
+            if (isset($validated['genres'])) {
                 $book->genres()->attach($validated['genres']);
             }
 
             $this->logAction('created', $book);
-
             return response()->json($book->load('genres'), 201);
         }
         catch (\Exception $e) {
@@ -96,7 +93,7 @@ class BookController extends Controller
                 ], 401);
             }
 
-            if (Auth::user()->cannot('delete', $book)) {
+            if (Auth::user()->cannot('update', $book)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Вы не автор этой книги'
@@ -118,10 +115,9 @@ class BookController extends Controller
             }
 
             $this->logAction('updated', $book);
-
             return response()->json([
                 'success' => true,
-                'data' => $book->fresh() // Возвращаем обновленные данные
+                'data' => $book->fresh()
             ]);
         }
         catch (\Exception $e) {
