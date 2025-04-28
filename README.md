@@ -1,11 +1,11 @@
 # book_registry
 
 Системный требования:
-● PHP 8+
-● PHP-фреймворк Laravel 10+
-● СУБД MySQL 8+ в качестве базы данных
 
-● Composer 2.8.8
+-   PHP 8+
+-   PHP-фреймворк Laravel 10+
+-   СУБД MySQL 8+ в качестве базы данных
+-   Composer 2.8.8
 
 Клонируйте репозиторий:
 git clone <ваш-репозиторий>
@@ -54,7 +54,7 @@ php artisan serve
 
     Body:
     {
-    "email": "user3@user.ru",
+    "email": "user@user.ru",
     "password": "123"
     }
 
@@ -73,10 +73,10 @@ php artisan serve
 
     Body:
     {
-    "title": "111",
-    "author_id": 4,
+    "title": "Новое название книги",
+    "author_id": 1,
     "type": "digital",
-    "genres": [2]
+    "genres": [1]
     }
 
 5.  Удаление книги, авторизация под автором книги обязательна
@@ -101,7 +101,7 @@ php artisan serve
 
     Body:
     {
-    "name": "ИмЯ"
+    "name": "Новое имя автора"
     }
 
 9.  Список жанров со списком книг внутри (с пагинацией)
